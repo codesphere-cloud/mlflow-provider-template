@@ -44,4 +44,5 @@ plans:
 - id: 0
   name: "Default"
   description: "Default plan"
-  parameters: {}
+  parameters:
+    cpu: 2
