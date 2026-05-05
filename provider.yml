@@ -45,4 +45,22 @@ plans:
   name: "Default"
   description: "Default plan"
   parameters:
-    cpu: 2
+    storage:
+      pricedAs: storage-mib
+      schema:
+        type: integer
+        default: 512
+        readOnly: false
+        minimum: 512
+    cpu:
+      pricedAs: cpu-tenths
+      schema:
+        type: number
+        default: 1
+        readOnly: true
+    memory:
+      pricedAs: ram-mib
+      schema:
+        type: integer
+        default: 128
+        readOnly: true
