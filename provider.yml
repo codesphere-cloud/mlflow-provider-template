@@ -40,4 +40,8 @@ detailsSchema:
     port:
       type: integer
 
-plans: []
+plans:
+- id: 1
+  name: Generic
+  description: Standard generic plan for regular workloads
+  parameters: {}
