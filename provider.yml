@@ -41,7 +41,7 @@ detailsSchema:
       type: integer
 
 plans:
-- id: 1
-  name: Generic
-  description: Standard generic plan for regular workloads
+- id: 0
+  name: "Default"
+  description: "Default plan"
   parameters: {}
