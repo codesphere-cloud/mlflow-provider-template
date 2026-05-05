@@ -39,3 +39,5 @@ detailsSchema:
       type: string
     port:
       type: integer
+
+plans: []
