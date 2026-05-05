@@ -1,0 +1,75 @@
+schemaVersion: v0.2
+prepare:
+  steps: []
+test:
+  steps: []
+run:
+  mlflow-pg:
+    provider:
+      name: postgres
+      version: v1
+    plan:
+      id: 0
+      parameters:
+        storage: 1024
+        cpu: 5
+        memory: 512
+    config:
+      version: "17.9"
+      userName: mlflow
+      databaseName: mlflow
+    secrets:
+      userPassword: ${{ vault['PG_PASSWORD'] }}
+      superuserPassword: ${{ vault['PG_POSTGRES_PASSWORD'] }}
+  mlflow-s3:
+    provider:
+      name: s3
+      version: v1
+    plan:
+      id: 0
+      parameters:
+        maxBuckets: 1
+    config:
+      accessKey: ${{ workspace.env['S3_ACCESS_KEY'] }}
+      userDisplayName: mlflow
+      initialBucketName: mlflow
+    secrets:
+      secretKey: ${{ vault['S3_SECRET_KEY'] }}
+  mlflow:
+    plan: 301
+    replicas: 1
+    network:
+      ports:
+        - port: 3000
+          isPublic: false
+      paths:
+        - port: 3000
+          path: /
+    env:
+      MLFLOW_SERVER_ALLOWED_HOSTS: "*"
+      POSTGRES_PASSWORD: ${{ vault['PG_PASSWORD'] }}
+      POSTGRES_DB: mlflow
+      PGPORT: 5432
+      AWS_ACCESS_KEY_ID: ${{ workspace.env['S3_ACCESS_KEY'] }}
+      AWS_SECRET_ACCESS_KEY: ${{ vault['S3_SECRET_KEY'] }}
+      AWS_DEFAULT_REGION: us-east-1
+      RUSTFS_CONSOLE_ENABLE: "true"
+      S3_BUCKET: mlflow
+      MLFLOW_HOST: 0.0.0.0
+      MLFLOW_PORT: 3000
+      MLFLOW_BACKEND_STORE_URI: postgresql://mlflow:mlflow@ms-postgres-v1-3-landscape-172-mlflow-pg.ms-postgres:5432/mlflow
+      MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
+      MLFLOW_S3_ENDPOINT_URL: http://rgw-load-balancer.rook-ceph.svc.cluster.local
+      POSTGRES_USER: mlflow
+    image: ghcr.io/mlflow/mlflow:v3.11.1-full
+    command:
+      - /bin/bash
+      - -c
+      - |
+        pip install --no-cache-dir psycopg2-binary boto3
+        mlflow server \
+          --backend-store-uri "${MLFLOW_BACKEND_STORE_URI}" \
+          --artifacts-destination "${MLFLOW_ARTIFACTS_DESTINATION}" \
+          --serve-artifacts \
+          --host "${MLFLOW_HOST}" \
+          --port "${MLFLOW_PORT}"

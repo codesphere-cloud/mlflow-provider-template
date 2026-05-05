@@ -1,0 +1,41 @@
+name: mlflow
+version: v1
+author: Codesphere
+displayName: MLFlow
+iconUrl: https://mlflow.org/docs/latest/images/logo-light.svg
+category: machine-learning
+description: |
+  The most vendor-neutral MLOps/LLMOps platform in the world.
+
+backend:
+  landscape:
+    gitUrl: https://github.com/codesphere-cloud/mlflow-provider-template
+    ciProfile: default
+
+configSchema:
+  type: object
+  properties:
+    S3_ACCESS_KEY:
+      type: string
+      description: Random access key to be created
+
+secretsSchema:
+  type: object
+  properties:
+    PG_PASSWORD:
+      type: string
+      format: password
+    PG_POSTGRES_PASSWORD:
+      type: string
+      format: password
+    S3_SECRET_KEY:
+      type: string
+      format: password
+
+detailsSchema:
+  type: object
+  properties:
+    hostname:
+      type: string
+    port:
+      type: integer
