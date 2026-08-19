@@ -57,7 +57,7 @@ run:
       S3_BUCKET: mlflow
       MLFLOW_HOST: 0.0.0.0
       MLFLOW_PORT: 3000
-      MLFLOW_BACKEND_STORE_URI: postgresql://mlflow:mlflow@ms-postgres-v1-3-landscape-172-mlflow-pg.ms-postgres:5432/mlflow
+      MLFLOW_BACKEND_STORE_URI: postgresql://mlflow:mlflow@ms-postgres-v1-3-landscape-{{ workspace.id }}-mlflow-pg.ms-postgres:5432/mlflow
       MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
       MLFLOW_S3_ENDPOINT_URL: http://rgw-load-balancer.rook-ceph.svc.cluster.local
       POSTGRES_USER: mlflow
